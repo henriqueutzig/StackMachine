@@ -13,11 +13,24 @@ enum Instruction{
     OUT                         //IO
 };
 
+enum OpStatus{
+    SyntaxError = 000,
+    InvalidInstruction = 001,
+    InvalidArgument = 002,
+    EmptyStack = 003,
+    FullStack = 004,
+    Normal = 255
+};
+
 class StackMachine
 {
 private:
+    uint32_t PC;
+    uint8_t stackPointer;
     uint16_t R;
     uint16_t stack[STACK_SIZE];
+    OpStatus push(uint16_t val);   // Stack full, returns value 1
+    OpStatus pop();                // Empty stack, returns 2
 public:
     StackMachine(/* args */);
     ~StackMachine();
