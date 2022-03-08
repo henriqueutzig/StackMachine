@@ -31,6 +31,7 @@ private:
     uint16_t stack[STACK_SIZE];
     OpStatus push(uint16_t val);   // Stack full, returns value 1
     OpStatus pop();                // Empty stack, returns 2
+    void out();
 public:
     StackMachine(/* args */);
     ~StackMachine();

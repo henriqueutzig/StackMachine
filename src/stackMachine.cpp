@@ -14,6 +14,8 @@ StackMachine::~StackMachine()
     // std::cout << "end" << std::endl;
 }
 
+
+// =============== CONTROL INSTRUCTIONS ===============
 OpStatus StackMachine::pop()
 {
     if (this->stackPointer == 0)
@@ -34,4 +36,10 @@ OpStatus StackMachine::push(uint16_t val)
     this->stack[this->stackPointer] = val;
 
     return Normal;
+}
+
+// =============== IO INSTRUCTIONS ===============
+void StackMachine::out()
+{
+    std::cout << this->stack[this->stackPointer] << std::endl;
 }
