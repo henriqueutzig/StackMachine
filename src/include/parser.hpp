@@ -6,6 +6,7 @@
 #include <bitset>
 #include <fstream>
 #include <sstream>
+#include <exception>
 
 using namespace std;
 
@@ -68,7 +69,7 @@ private:
     vector<InstAndArg> program;
     vector<string> programLine;
     //
-    InstAndArg convertLineToInst(string line, ParserStatus &lineStatus);
+    InstAndArg convertLineToInst(string line);
     bool isStringValidInstruction(string instructionString);
     bool isNumber(const string &str);
     vector<string> splitLine(string line);

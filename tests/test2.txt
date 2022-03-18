@@ -4,6 +4,7 @@ PUSH -1
 PUSH 0
 PUSH dawdkawd
 
+PUSH 2a
 
 PUSHA
 PUSHR
@@ -19,7 +20,7 @@ PUSH ;teste
 
 
 
-
+    
     MIR 
     PUSH
     POP 

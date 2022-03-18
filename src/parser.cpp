@@ -44,32 +44,32 @@ bool Parser::isStringValidInstruction(string instructionString)
     return false;
 }
 
-InstAndArg Parser::convertLineToInst(string line, ParserStatus &lineStatus)
+InstAndArg Parser::convertLineToInst(string line)
 {
     vector<string> words = splitLine(line);
 
     // caso de uma linha vazia ou so de comentario
     if (words.size() == 0)
-    {
-        lineStatus.error = Comment;
-        return (InstAndArg){ADD, 0};
-    }
+        throw Comment;
 
     if (!isStringValidInstruction(words[0]))
-        lineStatus.error = InvalidInstruction;
-    else if (words[0] == "PUSH")
+        throw InvalidInstruction;
+
+    if (words[0] == instructioString[PUSH])
     {
         if (words.size() != 2)
-            lineStatus.error = SyntaxError;
-        else if (words[1] == "$R")
+            throw SyntaxError;
+
+        if (words[1] == "$R")
             return (InstAndArg){PUSHR, 0};
-        else if (isNumber(words[1]))
-            return (InstAndArg){PUSH, stoi(words[1])};
-        else
-            lineStatus.error = InvalidArgument;
+
+        if (!isNumber(words[1]))
+            throw InvalidArgument;
+
+        return (InstAndArg){PUSH, stoi(words[1])};
     }
     else if (words.size() > 1)
-        lineStatus.error = SyntaxError;
+        throw SyntaxError;
 
     for (size_t i = ADD; i < PUSHR; i++)
         if (words[0] == instructioString[i])
@@ -85,17 +85,25 @@ vector<ParserStatus> Parser::readProgram(string inputFile)
     vector<ParserStatus> status;
 
     if (!inputEx.good())
-        return vector<ParserStatus>({0});
+    {
+        inputEx.close();
+        status.push_back({0, CouldNotReadFile});
+        return status;
+    }
 
     for (string line; getline(inputEx, line);)
     {
-        ParserStatus lineStatus = {++lineCount, NoError};
-        InstAndArg lineInst = this->convertLineToInst(line, lineStatus);
-
-        if (lineStatus.error == NoError)
+        lineCount++;
+        try
+        {
+            InstAndArg lineInst = this->convertLineToInst(line);
             this->program.push_back(lineInst);
-        else if (lineStatus.error != Comment)
-            status.push_back(lineStatus);
+        }
+        catch (const ParserError err)
+        {
+            if (err != Comment)
+                status.push_back({lineCount, err});
+        }
     }
 
     inputEx.close();
