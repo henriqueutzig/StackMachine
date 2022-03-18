@@ -13,9 +13,9 @@ int main(int argc, char *argv[])
         cout << "ERROR: Line: " << error.line << " code: " << error.error << endl;
     }
 
-    for (auto &&instAndArg : parser.getProgram())
+    for (auto &&op : parser.getProgram())
     {
-        cout << "instruction: " << instAndArg.first << " argument: " << instAndArg.second << endl;
+        cout << "instruction: " << op.instruction << " argument: " << op.argument << endl;
     }
 
     // cout << "StackMachine" << endl;

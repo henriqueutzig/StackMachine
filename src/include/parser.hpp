@@ -7,6 +7,7 @@
 #include <fstream>
 #include <sstream>
 #include <exception>
+#include "stackMachine.hpp"
 
 using namespace std;
 
@@ -60,16 +61,14 @@ struct ParserStatus
     ParserError error;
 };
 
-typedef pair<Instruction, bitset<16>> InstAndArg;
-
 class Parser
 {
 private:
     // vars
-    vector<InstAndArg> program;
+    vector<Operation> program;
     vector<string> programLine;
     //
-    InstAndArg convertLineToInst(string line);
+    Operation convertLineToInst(string line);
     bool isStringValidInstruction(string instructionString);
     bool isNumber(const string &str);
     vector<string> splitLine(string line);
@@ -78,7 +77,7 @@ public:
     // read
     vector<ParserStatus> readProgram(string inputFile);
     //
-    vector<InstAndArg> getProgram();
+    vector<Operation> getProgram();
     //
     Parser(/* args */);
     ~Parser();

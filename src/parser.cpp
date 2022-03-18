@@ -44,7 +44,7 @@ bool Parser::isStringValidInstruction(string instructionString)
     return false;
 }
 
-InstAndArg Parser::convertLineToInst(string line)
+Operation Parser::convertLineToInst(string line)
 {
     vector<string> words = splitLine(line);
 
@@ -61,21 +61,21 @@ InstAndArg Parser::convertLineToInst(string line)
             throw SyntaxError;
 
         if (words[1] == "$R")
-            return (InstAndArg){PUSHR, 0};
+            return (Operation){PUSHR, 0};
 
         if (!isNumber(words[1]))
             throw InvalidArgument;
 
-        return (InstAndArg){PUSH, stoi(words[1])};
+        return (Operation){PUSH, stoi(words[1])};
     }
     else if (words.size() > 1)
         throw SyntaxError;
 
     for (size_t i = ADD; i < PUSHR; i++)
         if (words[0] == instructioString[i])
-            return (InstAndArg){(Instruction)i, 0};
+            return (Operation){(Instruction)i, 0};
 
-    return (InstAndArg){ADD, 0}; // default return
+    return (Operation){ADD, 0}; // default return
 }
 
 vector<ParserStatus> Parser::readProgram(string inputFile)
@@ -96,7 +96,7 @@ vector<ParserStatus> Parser::readProgram(string inputFile)
         lineCount++;
         try
         {
-            InstAndArg lineInst = this->convertLineToInst(line);
+            Operation lineInst = this->convertLineToInst(line);
             this->program.push_back(lineInst);
         }
         catch (const ParserError err)
@@ -110,7 +110,7 @@ vector<ParserStatus> Parser::readProgram(string inputFile)
     return status;
 }
 
-vector<InstAndArg> Parser::getProgram()
+vector<Operation> Parser::getProgram()
 {
     return this->program;
 }

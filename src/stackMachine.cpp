@@ -31,7 +31,7 @@ OpStatus StackMachine::pop()
     return Normal;
 }
 
-OpStatus StackMachine::push(bitset<16> val)
+OpStatus StackMachine::push(bitset<INT_SIZE> val)
 {
     if (this->stackPointer >= STACK_SIZE - 1)
         return FullStack;
@@ -55,7 +55,7 @@ void StackMachine::add()
 {
     uint8_t c = 0;
     uint16_t stckP = this->stackPointer;
-    for (uint8_t i = 0; i < 16; i++)
+    for (uint8_t i = 0; i < INT_SIZE; i++)
     {
         this->R[i] = ((this->stack[stckP][i] ^ this->stack[stckP - 1][i]) ^ c); // c is carry
         c = ((this->stack[stckP][i] & this->stack[stckP - 1][i]) | (this->stack[stckP][i] & c)) | (this->stack[stckP - 1][i] & c);
