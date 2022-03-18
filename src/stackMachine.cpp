@@ -11,12 +11,12 @@ StackMachine::StackMachine(/* args */)
 
 StackMachine::~StackMachine()
 {
-    // std::cout << "end" << std::endl;
+    // cout << "end" << endl;
     // for (uint8_t i = 0; i < STACK_SIZE; i++)
-    //     std::cout << this->stack[i] << std::endl;
+    //     cout << this->stack[i] << endl;
 
-    // std::cout << "R: " << this->R << std::endl;
-    // std::cout << "StackPointer: " << this->stackPointer << std::endl;
+    // cout << "R: " << this->R << endl;
+    // cout << "StackPointer: " << this->stackPointer << endl;
 }
 
 // =============== CONTROL INSTRUCTIONS ===============
@@ -31,7 +31,7 @@ OpStatus StackMachine::pop()
     return Normal;
 }
 
-OpStatus StackMachine::push(std::bitset<16> val)
+OpStatus StackMachine::push(bitset<INT_SIZE> val)
 {
     if (this->stackPointer >= STACK_SIZE - 1)
         return FullStack;
@@ -45,19 +45,19 @@ OpStatus StackMachine::push(std::bitset<16> val)
 // =============== IO INSTRUCTIONS ===============
 void StackMachine::out()
 {
-    std::cout << this->stack[this->stackPointer] << std::endl;
+    cout << this->stack[this->stackPointer] << endl;
 }
 
 // =============== LOGIC INSTRUCTIONS ===============
-
 
 // =============== ARITHMETIC INSTRUCTIONS ===============
 void StackMachine::add()
 {
     uint8_t c = 0;
-    for (uint8_t i = 0; i < 16; i++)
+    uint16_t stckP = this->stackPointer;
+    for (uint8_t i = 0; i < INT_SIZE; i++)
     {
-        this->R[i] = ((this->stack[this->stackPointer][i] ^ this->stack[this->stackPointer - 1][i]) ^ c); // c is carry
-        c = ((this->stack[this->stackPointer][i] & this->stack[this->stackPointer - 1][i]) | (this->stack[this->stackPointer][i] & c)) | (this->stack[this->stackPointer - 1][i] & c);
+        this->R[i] = ((this->stack[stckP][i] ^ this->stack[stckP - 1][i]) ^ c); // c is carry
+        c = ((this->stack[stckP][i] & this->stack[stckP - 1][i]) | (this->stack[stckP][i] & c)) | (this->stack[stckP - 1][i] & c);
     }
 }

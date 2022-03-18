@@ -4,17 +4,13 @@
 #include <iostream>
 #include <stdint.h>
 #include <bitset>
+#include "instructions.hpp"
 
 #define STACK_SIZE 128
 
-enum Instruction{
-    ADD, SUB, MUL, DIV, MOD,    //Arithmetic 
-    NOT, OR, AND, MIR,          //Logic
-    PUSH, POP,                  //Control
-    OUT                         //IO
-};
 
-enum OpStatus{
+enum OpStatus
+{
     // SyntaxError = 000,
     // InvalidInstruction = 001,
     // InvalidArgument = 002,
@@ -29,11 +25,11 @@ private:
     // Vars
     uint32_t PC = 0;
     uint16_t stackPointer = 0;
-    std::bitset<16> R = 0;
-    std::bitset<16> stack[STACK_SIZE] = {0};
+    bitset<INT_SIZE> R = 0;
+    bitset<INT_SIZE> stack[STACK_SIZE] = {0};
     // Controll
-    OpStatus push(std::bitset<16> val);   // Stack full, returns value 1
-    OpStatus pop();                       // Empty stack, returns 2
+    OpStatus push(bitset<INT_SIZE> val); // Stack full, returns value 1
+    OpStatus pop();                      // Empty stack, returns 2
     // IO
     void out();
     // Logic
@@ -41,7 +37,7 @@ private:
     void opOr();
     void opAnd();
     void opMir();
-    // Arithmetic 
+    // Arithmetic
     void add();
     void sub();
     void mul();
@@ -52,7 +48,5 @@ public:
     StackMachine(/* args */);
     ~StackMachine();
 };
-
-
 
 #endif
