@@ -4,15 +4,9 @@
 #include <iostream>
 #include <stdint.h>
 #include <bitset>
+#include "parser.hpp"
 
 #define STACK_SIZE 128
-
-enum Instruction{
-    ADD, SUB, MUL, DIV, MOD,    //Arithmetic 
-    NOT, OR, AND, MIR,          //Logic
-    PUSH, POP,                  //Control
-    OUT                         //IO
-};
 
 enum OpStatus{
     // SyntaxError = 000,

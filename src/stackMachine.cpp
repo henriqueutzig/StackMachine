@@ -50,14 +50,14 @@ void StackMachine::out()
 
 // =============== LOGIC INSTRUCTIONS ===============
 
-
 // =============== ARITHMETIC INSTRUCTIONS ===============
 void StackMachine::add()
 {
     uint8_t c = 0;
+    uint16_t stckP = this->stackPointer;
     for (uint8_t i = 0; i < 16; i++)
     {
-        this->R[i] = ((this->stack[this->stackPointer][i] ^ this->stack[this->stackPointer - 1][i]) ^ c); // c is carry
-        c = ((this->stack[this->stackPointer][i] & this->stack[this->stackPointer - 1][i]) | (this->stack[this->stackPointer][i] & c)) | (this->stack[this->stackPointer - 1][i] & c);
+        this->R[i] = ((this->stack[stckP][i] ^ this->stack[stckP - 1][i]) ^ c); // c is carry
+        c = ((this->stack[stckP][i] & this->stack[stckP - 1][i]) | (this->stack[stckP][i] & c)) | (this->stack[stckP - 1][i] & c);
     }
 }
