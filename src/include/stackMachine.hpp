@@ -23,10 +23,10 @@ private:
     // Vars
     uint32_t PC = 0;
     uint16_t stackPointer = 0;
-    std::bitset<16> R = 0;
-    std::bitset<16> stack[STACK_SIZE] = {0};
+    bitset<16> R = 0;
+    bitset<16> stack[STACK_SIZE] = {0};
     // Controll
-    OpStatus push(std::bitset<16> val);   // Stack full, returns value 1
+    OpStatus push(bitset<16> val);   // Stack full, returns value 1
     OpStatus pop();                       // Empty stack, returns 2
     // IO
     void out();

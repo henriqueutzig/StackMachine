@@ -1,13 +1,30 @@
 #include "include/parser.hpp"
 
-std::vector<std::string> Parser::splitLine(std::string line)
+// TODO: checar se o tamanho do int eh valido
+bool Parser::isNumber(const string &str)
 {
-    std::vector<std::string> words;
+    size_t i = 0;
 
-    std::string word;
-    std::stringstream iss(line);
+    // ignora o sinal de menos
+    if (str[0] == '-')
+        i++;
 
-    // Read and print each word.
+    for (; i < str.size(); i++)
+    {
+        if (isdigit(str[i]) == 0)
+            return false;
+    }
+    return true;
+}
+
+vector<string> Parser::splitLine(string line)
+{
+    vector<string> words;
+
+    string word;
+    stringstream iss(line);
+
+    // TODO: ver o caso de ter um comentario logo apos uma operacao ou operando eg. PUSH $R;comment here
     while (iss >> word)
     {
         if (word[0] == ';')
@@ -18,50 +35,82 @@ std::vector<std::string> Parser::splitLine(std::string line)
     return words;
 }
 
-instAndArg Parser::convertLineToInst(std::string line, ParserError &status)
+bool Parser::isStringValidInstruction(string instructionString)
 {
-    std::vector<std::string> words = splitLine(line);
-    
-    if(words.size() == 2 && words[0] != "PUSH")
-    {
-        status = InvalidArgument;
-    }
+    for (size_t i = ADD; i < PUSHR; i++)
+        if (instructionString == instructioString[i])
+            return true;
 
-
-    return (instAndArg){AND, NoError};
+    return false;
 }
 
-ParserError Parser::readProgram(std::string inputFile)
+InstAndArg Parser::convertLineToInst(string line, ParserStatus &lineStatus)
 {
-    std::ifstream inputEx(inputFile);
-    if (!inputEx.good())
-        return CouldNotReadFile;
+    vector<string> words = splitLine(line);
 
-    for (std::string line; std::getline(inputEx, line);)
+    // caso de uma linha vazia ou so de comentario
+    if (words.size() == 0)
     {
-        ParserError status = NoError;
-        instAndArg lineInst = this->convertLineToInst(line, status);
-        if (status != NoError)
-            return status;
+        lineStatus.error = Comment;
+        return (InstAndArg){ADD, 0};
+    }
 
-        this->program.push_back(lineInst);
+    if (!isStringValidInstruction(words[0]))
+        lineStatus.error = InvalidInstruction;
+    else if (words[0] == "PUSH")
+    {
+        if (words.size() != 2)
+            lineStatus.error = SyntaxError;
+        else if (words[1] == "$R")
+            return (InstAndArg){PUSHR, 0};
+        else if (isNumber(words[1]))
+            return (InstAndArg){PUSH, stoi(words[1])};
+        else
+            lineStatus.error = InvalidArgument;
+    }
+    else if (words.size() > 1)
+        lineStatus.error = SyntaxError;
+
+    for (size_t i = ADD; i < PUSHR; i++)
+        if (words[0] == instructioString[i])
+            return (InstAndArg){(Instruction)i, 0};
+
+    return (InstAndArg){ADD, 0}; // default return
+}
+
+vector<ParserStatus> Parser::readProgram(string inputFile)
+{
+    ifstream inputEx(inputFile);
+    uint32_t lineCount = 0;
+    vector<ParserStatus> status;
+
+    if (!inputEx.good())
+        return vector<ParserStatus>({0});
+
+    for (string line; getline(inputEx, line);)
+    {
+        ParserStatus lineStatus = {++lineCount, NoError};
+        InstAndArg lineInst = this->convertLineToInst(line, lineStatus);
+
+        if (lineStatus.error == NoError)
+            this->program.push_back(lineInst);
+        else if (lineStatus.error != Comment)
+            status.push_back(lineStatus);
     }
 
     inputEx.close();
-    return NoError;
+    return status;
 }
 
-std::vector<instAndArg> Parser::getProgram()
+vector<InstAndArg> Parser::getProgram()
 {
     return this->program;
 }
 
 Parser::Parser()
 {
-
 }
 
 Parser::~Parser()
 {
-
 }

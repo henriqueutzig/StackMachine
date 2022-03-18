@@ -11,12 +11,12 @@ StackMachine::StackMachine(/* args */)
 
 StackMachine::~StackMachine()
 {
-    // std::cout << "end" << std::endl;
+    // cout << "end" << endl;
     // for (uint8_t i = 0; i < STACK_SIZE; i++)
-    //     std::cout << this->stack[i] << std::endl;
+    //     cout << this->stack[i] << endl;
 
-    // std::cout << "R: " << this->R << std::endl;
-    // std::cout << "StackPointer: " << this->stackPointer << std::endl;
+    // cout << "R: " << this->R << endl;
+    // cout << "StackPointer: " << this->stackPointer << endl;
 }
 
 // =============== CONTROL INSTRUCTIONS ===============
@@ -31,7 +31,7 @@ OpStatus StackMachine::pop()
     return Normal;
 }
 
-OpStatus StackMachine::push(std::bitset<16> val)
+OpStatus StackMachine::push(bitset<16> val)
 {
     if (this->stackPointer >= STACK_SIZE - 1)
         return FullStack;
@@ -45,7 +45,7 @@ OpStatus StackMachine::push(std::bitset<16> val)
 // =============== IO INSTRUCTIONS ===============
 void StackMachine::out()
 {
-    std::cout << this->stack[this->stackPointer] << std::endl;
+    cout << this->stack[this->stackPointer] << endl;
 }
 
 // =============== LOGIC INSTRUCTIONS ===============
