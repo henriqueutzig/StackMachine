@@ -4,10 +4,10 @@
 #include <iostream>
 #include <stdint.h>
 #include <bitset>
-#include "parser.hpp"
+#include "instructions.hpp"
 
 #define STACK_SIZE 128
-#define INT_SIZE 16
+
 
 enum OpStatus
 {
@@ -17,12 +17,6 @@ enum OpStatus
     EmptyStack = 000,
     FullStack = 001,
     Normal = 255
-};
-
-struct Operation
-{
-    Instruction instruction;
-    bitset<INT_SIZE> argument;
 };
 
 class StackMachine

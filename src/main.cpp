@@ -1,12 +1,13 @@
 #include <iostream>
 #include "include/stackMachine.hpp"
+#include  "include/parser.hpp"
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     StackMachine machine;
     Parser parser;
-    std::vector<ParserStatus> status = parser.readProgram("tests/test2.txt");
+    std::vector<ParserStatus> status = parser.readProgram("tests/test1.txt");
 
     for (auto &&error : status)
     {
