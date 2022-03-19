@@ -6,7 +6,7 @@
 #include <bitset>
 #include <fstream>
 #include <sstream>
-#include <exception>
+
 using namespace std;
 #define INT_SIZE 16
 
