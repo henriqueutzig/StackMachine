@@ -27,7 +27,7 @@ enum ErrorCode
 struct MachineStatus
 {
     uint32_t line;
-    ErrorCode error;
+    ErrorCode errorCode;
 };
 
 enum Instruction
@@ -70,5 +70,17 @@ static const char *instructioString[] =
         "POP",
         "OUT",
         "CLEAR"};
+
+static const char *errorString[] =
+    {
+        "Syntax error",
+        "Invalid instruction",
+        "Invalid argument",
+        "Stack already empty",
+        "Stack overflow",
+        "Could not read file",
+        "Unexpected runtime error",
+        "Division by zero not allowed",
+        "Square root of negative numbers not allowed"};
 
 #endif
