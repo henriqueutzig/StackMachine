@@ -18,6 +18,25 @@ StackMachine::~StackMachine()
     // cout << "StackPointer: " << stackPointer << endl;
 }
 
+void StackMachine::run(vector<Operation> program)
+{
+    cout << "PROGRAM STARTED" << endl;
+
+    for (auto &&op : program)
+    {
+        try
+        {
+            callOperation(op);
+        }
+        catch (const ErrorCode &err)
+        {
+            throw(MachineStatus){op.lineInFile, err};
+        }
+    }
+
+    cout << "PROGRAM ENDED" << endl;
+}
+
 // =============== CONTROL INSTRUCTIONS ===============
 void StackMachine::clear()
 {
@@ -26,32 +45,38 @@ void StackMachine::clear()
         stack[i] = 0;
 }
 
-OpStatus StackMachine::pop()
+void StackMachine::pop()
 {
     if (PC == 0)
-        return EmptyStack;
+        throw EmptyStack;
 
     stack[PC] = 0;
     PC--;
-
-    return Normal;
 }
 
-OpStatus StackMachine::push(bitset<INT_SIZE> val)
+void StackMachine::push(bitset<INT_SIZE> val)
 {
     if (PC >= STACK_SIZE - 1)
-        return FullStack;
+        throw FullStack;
 
     PC++;
     stack[PC] = val;
+}
 
-    return Normal;
+void StackMachine::push()
+{
+    if (PC >= STACK_SIZE - 1)
+        throw FullStack;
+
+    PC++;
+    stack[PC] = R;
 }
 
 // =============== IO INSTRUCTIONS ===============
 void StackMachine::out()
 {
-    cout << stack[PC] << endl;
+    int16_t outInt = (int)(stack[PC].to_ulong());
+    cout << "INT: " << outInt << " BINARY: " << stack[PC] << endl;
 }
 
 // =============== LOGIC INSTRUCTIONS ===============
@@ -76,49 +101,86 @@ void StackMachine::opAnd()
 
 void StackMachine::opMir()
 {
-    for (uint8_t i = INT_SIZE - 1; i >= 0; i--)
+
+    for (int8_t i = INT_SIZE - 1; i >= 0; i--)
         R[INT_SIZE - i - 1] = stack[PC][i];
 }
 
 // =============== ARITHMETIC INSTRUCTIONS ===============
 void StackMachine::add()
 {
-    bool c = 0;
-    // R = op1 + op2
-    for (uint8_t i = 0; i < INT_SIZE; i++)
-        R[i] = bitArithmetic::Adder(stack[PC][i], stack[PC - 1][i], c);
+    R = bitArithmetic::adder16Bits(stack[PC], stack[PC - 1]);
 }
 
 void StackMachine::sub()
 {
-    bool b = 0;
-    // R = op1 - op2
-    for (uint8_t i = 0; i < INT_SIZE; i++)
-        R[i] = bitArithmetic::Subtractor(stack[PC][i], stack[PC - 1][i], b);
+    R = bitArithmetic::subtractor16Bits(stack[PC], stack[PC - 1]);
 }
 
-// void StackMachine::sub()
-// {
-//     // R = op1 - op2
-//     bitset<INT_SIZE> op1 = stack[PC];
-//     bitset<INT_SIZE> op2 = stack[PC - 1];
-//     bitset<INT_SIZE> temp;
-//     const bitset<INT_SIZE> ONE = 1;
-//     uint8_t c = 0;
+void StackMachine::mul()
+{
+    bitset<INT_SIZE> op1 = stack[PC];
+    bitset<INT_SIZE> op2 = stack[PC - 1];
 
-//     // complemento de 2 do op2
-//     for (uint8_t i = 0; i < INT_SIZE; i++)
-//     {
-//         temp[i] = ~op2[i];
-//         op2[i] = ((temp[i] ^ ONE[i]) ^ c); // c is carry
-//         c = ((temp[i] & ONE[i]) | (temp[i] & c)) | (ONE[i] & c);
-//     }
+    R = 0;
 
-//     c = 0;
+    for (int i = 0; i < INT_SIZE; i++)
+        if (op1[i])
+            R = bitArithmetic::adder16Bits(R, op2 << i);
+}
 
-//     for (uint8_t i = 0; i < INT_SIZE; i++)
-//     {
-//         R[i] = ((op1[i] ^ op2[i]) ^ c); // c is carry
-//         c = ((op1[i] & op2[i]) | (op1[i] & c)) | (op2[i] & c);
-//     }
-// }
+void StackMachine::div() {}
+void StackMachine::mod() {}
+
+// =============== MISC ===============
+void StackMachine::callOperation(Operation op)
+{
+    switch (op.instruction)
+    {
+    case ADD:
+        add();
+        break;
+    case SUB:
+        sub();
+        break;
+    case MUL:
+        mul();
+        break;
+    case DIV:
+        div();
+        break;
+    case MOD:
+        mod();
+        break;
+    case NOT:
+        opNot();
+        break;
+    case OR:
+        opOr();
+        break;
+    case AND:
+        opAnd();
+        break;
+    case MIR:
+        opMir();
+        break;
+    case PUSH:
+        push(op.argument);
+        break;
+    case POP:
+        pop();
+        break;
+    case OUT:
+        out();
+        break;
+    case CLEAR:
+        clear();
+        break;
+    case PUSHR:
+        push();
+        break;
+
+    default:
+        throw GenericRunTimeError;
+    }
+}

@@ -10,6 +10,26 @@
 using namespace std;
 #define INT_SIZE 16
 
+enum ErrorCode
+{
+    SyntaxError,
+    InvalidInstruction,
+    InvalidArgument,
+    EmptyStack,
+    FullStack,
+    CouldNotReadFile,
+    GenericRunTimeError,
+    DivisionByZero,
+    SqrtOfNegativeNumber,
+    Comment = 255,
+};
+
+struct MachineStatus
+{
+    uint32_t line;
+    ErrorCode error;
+};
+
 enum Instruction
 {
     ADD,
@@ -30,6 +50,7 @@ enum Instruction
 
 struct Operation
 {
+    uint32_t lineInFile;
     Instruction instruction;
     bitset<INT_SIZE> argument;
 };

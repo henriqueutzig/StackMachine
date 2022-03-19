@@ -10,27 +10,19 @@
 
 #define STACK_SIZE 128
 
-enum OpStatus
-{
-    // SyntaxError = 000,
-    // InvalidInstruction = 001,
-    // InvalidArgument = 002,
-    EmptyStack = 000,
-    FullStack = 001,
-    Normal = 255
-};
-
 class StackMachine
 {
 private:
     // Vars
     uint8_t PC = 0; // PC é o stackPointer
+    uint32_t lineInFile = 0;
     bitset<INT_SIZE> R = 0;
     bitset<INT_SIZE> stack[STACK_SIZE] = {0};
     // Controll
     void clear();
-    OpStatus push(bitset<INT_SIZE> val); // Stack full, returns value 1
-    OpStatus pop();                      // Empty stack, returns 2
+    void push(bitset<INT_SIZE> val); // Stack full, returns value 1
+    void push();                     // Stack full, returns value 1
+    void pop();                      // Empty stack, returns 2
     // IO
     void out();
     // Logic
@@ -45,8 +37,12 @@ private:
     void div();
     void mod();
 
+    // misc
+    void callOperation(Operation op);
+
 public:
     StackMachine(/* args */);
+    void run(vector<Operation> program);
     ~StackMachine();
 };
 

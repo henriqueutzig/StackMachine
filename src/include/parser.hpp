@@ -12,26 +12,10 @@
 
 using namespace std;
 
-enum ParserError
-{
-    SyntaxError = 000,
-    InvalidInstruction = 001,
-    InvalidArgument = 002,
-    CouldNotReadFile = 003,
-    Comment = 254,
-    NoError = 255
-};
-
-struct ParserStatus
-{
-    uint32_t line;
-    ParserError error;
-};
-
 class Parser
 {
 private:
-    static Operation convertLineToInst(string line);
+    static Operation convertLineToInst(string line, uint32_t lineCount);
     static bool isStringValidInstruction(string instructionString);
     static bool isNumber(const string &str);
     static vector<string> splitLine(string line);

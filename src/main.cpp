@@ -6,18 +6,20 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     StackMachine machine;
-    Parser parser;
 
     try
     {
-        vector<Operation> program = Parser::parseFile("tests/test1.txt");
-        for (auto &&op : program)
-            cout << "instruction: " << op.instruction << " argument: " << op.argument << endl;
+        vector<Operation> program = Parser::parseFile("tests/arithmeticOp.txt");
+        machine.run(program);
     }
-    catch (const vector<ParserStatus> &status)
+    catch (const vector<MachineStatus> &parserErrors)
     {
-        for (auto &&error : status)
-            cout << "ERROR: Line: " << error.line << " code: " << error.error << endl;
+        for (auto &&error : parserErrors)
+            cout << "PARSER ERROR: Line: " << error.line << " code: " << error.error << endl;
+    }
+    catch (const MachineStatus &runTimeError)
+    {
+        cout << "RUNTIME ERROR: Line: " << runTimeError.line << " code: " << runTimeError.error << endl;
     }
 
     // cout << "StackMachine" << endl;

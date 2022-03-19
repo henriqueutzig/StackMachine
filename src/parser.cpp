@@ -44,7 +44,7 @@ bool Parser::isStringValidInstruction(string instructionString)
     return false;
 }
 
-Operation Parser::convertLineToInst(string line)
+Operation Parser::convertLineToInst(string line, uint32_t lineCount)
 {
     vector<string> words = splitLine(line);
 
@@ -61,28 +61,28 @@ Operation Parser::convertLineToInst(string line)
             throw SyntaxError;
 
         if (words[1] == "$R")
-            return (Operation){PUSHR, 0};
+            return (Operation){lineCount, PUSHR, 0};
 
         if (!isNumber(words[1]))
             throw InvalidArgument;
 
-        return (Operation){PUSH, stoi(words[1])};
+        return (Operation){lineCount, PUSH, stoi(words[1])};
     }
     else if (words.size() > 1)
         throw SyntaxError;
 
     for (size_t i = ADD; i < PUSHR; i++)
         if (words[0] == instructioString[i])
-            return (Operation){(Instruction)i, 0};
+            return (Operation){lineCount, (Instruction)i, 0};
 
-    return (Operation){ADD, 0}; // default return
+    return (Operation){lineCount, ADD, 0}; // default return
 }
 
 vector<Operation> Parser::parseFile(string inputFile)
 {
     ifstream inputEx(inputFile);
     uint32_t lineCount = 0;
-    vector<ParserStatus> status;
+    vector<MachineStatus> status;
     vector<Operation> program;
 
     if (!inputEx.good())
@@ -97,10 +97,10 @@ vector<Operation> Parser::parseFile(string inputFile)
         lineCount++;
         try
         {
-            Operation lineInst = convertLineToInst(line);
+            Operation lineInst = convertLineToInst(line, lineCount);
             program.push_back(lineInst);
         }
-        catch (const ParserError err)
+        catch (const ErrorCode err)
         {
             if (err != Comment)
                 status.push_back({lineCount, err});
