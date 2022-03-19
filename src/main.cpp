@@ -1,22 +1,23 @@
 #include <iostream>
 #include "include/stackMachine.hpp"
-#include  "include/parser.hpp"
+#include "include/parser.hpp"
 using namespace std;
 
 int main(int argc, char *argv[])
 {
     StackMachine machine;
     Parser parser;
-    std::vector<ParserStatus> status = parser.readProgram("tests/test1.txt");
 
-    for (auto &&error : status)
+    try
     {
-        cout << "ERROR: Line: " << error.line << " code: " << error.error << endl;
+        vector<Operation> program = Parser::parseFile("tests/test1.txt");
+        for (auto &&op : program)
+            cout << "instruction: " << op.instruction << " argument: " << op.argument << endl;
     }
-
-    for (auto &&op : parser.getProgram())
+    catch (const vector<ParserStatus> &status)
     {
-        cout << "instruction: " << op.instruction << " argument: " << op.argument << endl;
+        for (auto &&error : status)
+            cout << "ERROR: Line: " << error.line << " code: " << error.error << endl;
     }
 
     // cout << "StackMachine" << endl;

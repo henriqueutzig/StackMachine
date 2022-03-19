@@ -78,17 +78,18 @@ Operation Parser::convertLineToInst(string line)
     return (Operation){ADD, 0}; // default return
 }
 
-vector<ParserStatus> Parser::readProgram(string inputFile)
+vector<Operation> Parser::parseFile(string inputFile)
 {
     ifstream inputEx(inputFile);
     uint32_t lineCount = 0;
     vector<ParserStatus> status;
+    vector<Operation> program;
 
     if (!inputEx.good())
     {
         inputEx.close();
         status.push_back({0, CouldNotReadFile});
-        return status;
+        throw status;
     }
 
     for (string line; getline(inputEx, line);)
@@ -96,8 +97,8 @@ vector<ParserStatus> Parser::readProgram(string inputFile)
         lineCount++;
         try
         {
-            Operation lineInst = this->convertLineToInst(line);
-            this->program.push_back(lineInst);
+            Operation lineInst = convertLineToInst(line);
+            program.push_back(lineInst);
         }
         catch (const ParserError err)
         {
@@ -107,12 +108,11 @@ vector<ParserStatus> Parser::readProgram(string inputFile)
     }
 
     inputEx.close();
-    return status;
-}
 
-vector<Operation> Parser::getProgram()
-{
-    return this->program;
+    if (status.size() > 0)
+        throw status;
+
+    return program;
 }
 
 Parser::Parser()

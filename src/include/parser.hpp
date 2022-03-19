@@ -31,21 +31,14 @@ struct ParserStatus
 class Parser
 {
 private:
-    // vars
-    vector<Operation> program;
-    vector<string> programLine;
-    //
-    Operation convertLineToInst(string line);
-    bool isStringValidInstruction(string instructionString);
-    bool isNumber(const string &str);
-    vector<string> splitLine(string line);
+    static Operation convertLineToInst(string line);
+    static bool isStringValidInstruction(string instructionString);
+    static bool isNumber(const string &str);
+    static vector<string> splitLine(string line);
 
 public:
     // read
-    vector<ParserStatus> readProgram(string inputFile);
-    //
-    vector<Operation> getProgram();
-    //
+    static vector<Operation> parseFile(string inputFile);
     Parser(/* args */);
     ~Parser();
 };
