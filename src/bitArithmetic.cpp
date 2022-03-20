@@ -45,46 +45,33 @@ bitset<N> bitArithmetic::subtractorNBits(const bitset<N> &op1, const bitset<N> &
     return res;
 }
 
-// TODO: comparison operation does not include negative numbers
-
 bool bitArithmetic::lessOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
 {
-    for (int i = N - 1; i >= 0; i--)
-    {
-        if (op1[i] ^ op2[i])
-            return op2[i];
-    }
-    return true;
+    bitset<N> res = subtractorNBits(op1, op2);
+
+    if (res == 0)
+        return true;
+    return subtractorNBits(op1, op2)[N - 1];
 }
 
 bool bitArithmetic::lessThen(const bitset<N> &op1, const bitset<N> &op2)
 {
-    for (int i = N - 1; i >= 0; i--)
-    {
-        if (op1[i] ^ op2[i])
-            return op2[i];
-    }
-    return false;
+    return subtractorNBits(op1, op2)[N - 1];
 }
 
 bool bitArithmetic::greaterOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
 {
-    for (int i = N - 1; i >= 0; i--)
-    {
-        if (op1[i] ^ op2[i])
-            return ~op2[i];
-    }
-    return true;
+    bitset<N> res = subtractorNBits(op2, op1);
+
+    if (res == 0)
+        return true;
+
+    return subtractorNBits(op2, op1)[N - 1];
 }
 
 bool bitArithmetic::greaterThen(const bitset<N> &op1, const bitset<N> &op2)
 {
-    for (int i = N - 1; i >= 0; i--)
-    {
-        if (op1[i] ^ op2[i])
-            return ~op2[i];
-    }
-    return false;
+    return subtractorNBits(op2, op1)[N - 1];
 }
 
 bitset<N> bitArithmetic::abs(const bitset<N> &op)
@@ -92,11 +79,20 @@ bitset<N> bitArithmetic::abs(const bitset<N> &op)
     return lessThen(op, 0) ? subtractorNBits(0, op) : op;
 }
 
+bitset<N> bitArithmetic::multiplicationNbits(bitset<N> op1, bitset<N> op2)
+{
+    bitset<N> res = 0;
+    for (int i = 0; i < N; i++)
+        if (op1[i])
+            res = bitArithmetic::adderNBits(res, op2 << i);
+    return res;
+}
+
 int topBitSet(const bitset<N> &op)
 {
     int i;
     for (i = N - 1; i >= 0; i--)
-        if (op.test(i))
+        if (op[i])
             break;
     return i;
 }
@@ -111,7 +107,7 @@ bitset<N> bitArithmetic::divisionNbits(bitset<N> op1, bitset<N> op2, bitset<N> &
     int divisor_size = topBitSet(absOp2);
 
     if (divisor_size < 0)
-        throw;
+        throw 0;
 
     int bit;
 

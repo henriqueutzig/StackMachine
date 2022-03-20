@@ -26,6 +26,8 @@ struct bitArithmetic
 
     static bitset<N> abs(const bitset<N> &op);
 
+    static bitset<N> multiplicationNbits(bitset<N> op1, bitset<N> op2);
+
     static bitset<N> divisionNbits(bitset<N> op1, bitset<N> op2, bitset<N> &r);
 };
 

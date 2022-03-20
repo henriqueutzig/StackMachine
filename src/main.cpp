@@ -26,6 +26,5 @@ int main(int argc, char *argv[])
              << " Message: " << errorString[runTimeError.errorCode] << ")" << endl;
     }
 
-    // cout << "StackMachine" << endl;
     return 0;
 }

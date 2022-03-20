@@ -8,15 +8,7 @@ StackMachine::StackMachine(/* args */)
         stack[i] = 0;
 }
 
-StackMachine::~StackMachine()
-{
-    // cout << "end" << endl;
-    // for (uint8_t i = 0; i < STACK_SIZE; i++)
-    //     cout << stack[i] << endl;
-
-    // cout << "R: " << R << endl;
-    // cout << "StackPointer: " << stackPointer << endl;
-}
+StackMachine::~StackMachine(){}
 
 void StackMachine::run(vector<Operation> program)
 {
@@ -119,25 +111,78 @@ void StackMachine::sub()
 
 void StackMachine::mul()
 {
-    bitset<INT_SIZE> op1 = stack[PC];
-    bitset<INT_SIZE> op2 = stack[PC - 1];
-
-    R = 0;
-
-    for (int i = 0; i < INT_SIZE; i++)
-        if (op1[i])
-            R = bitArithmetic::adderNBits(R, op2 << i);
+    R = bitArithmetic::multiplicationNbits(stack[PC], stack[PC - 1]);
 }
 
+// R = op1 / op2
 void StackMachine::div()
 {
     bitset<INT_SIZE> r = 0;
-    R = bitArithmetic::divisionNbits(stack[PC], stack[PC - 1], r);
+    try
+    {
+        R = bitArithmetic::divisionNbits(stack[PC], stack[PC - 1], r);
+    }
+    catch (const int err)
+    {
+        throw DivisionByZero;
+    }
 }
 
+// R = op1 mod 2
 void StackMachine::mod()
 {
-    bitArithmetic::divisionNbits(stack[PC], stack[PC - 1], R);
+    try
+    {
+        bitArithmetic::divisionNbits(stack[PC], stack[PC - 1], R);
+    }
+    catch (const int err)
+    {
+        throw DivisionByZero;
+    }
+}
+
+// R = op1^op2
+void StackMachine::pow()
+{
+    bitset<INT_SIZE> op1 = stack[PC];
+    bitset<INT_SIZE> op2 = stack[PC - 1];
+
+    if (op2[INT_SIZE - 1])
+        throw PowOfNegativenumber;
+
+    R = 1;
+
+    for (size_t i = 0; bitArithmetic::lessThen(i, op2); i++)
+    {
+        R = bitArithmetic::multiplicationNbits(op1, R);
+    }
+}
+
+// R = (int)op1^(-2)
+// TODO: extremely rudimentary algorithm, please improve
+void StackMachine::sqrt()
+{
+    bitset<INT_SIZE> op = stack[PC];
+
+    if (op[INT_SIZE - 1])
+        throw SqrtOfNegativeNumber;
+
+    if (op == 0 || op == 1)
+    {
+        R = op;
+        return;
+    }
+
+    bitset<INT_SIZE> i = 1;
+    bitset<INT_SIZE> res = 1;
+
+    while (bitArithmetic::lessOrEqThen(res, op))
+    {
+        i = bitArithmetic::adderNBits(i, 1);
+        res = bitArithmetic::multiplicationNbits(i, i);
+    }
+
+    R = bitArithmetic::subtractorNBits(i, 1);
 }
 
 // =============== MISC ===============
@@ -159,6 +204,12 @@ void StackMachine::callOperation(Operation op)
         break;
     case MOD:
         mod();
+        break;
+    case POW:
+        pow();
+        break;
+    case SQRT:
+        sqrt();
         break;
     case NOT:
         opNot();

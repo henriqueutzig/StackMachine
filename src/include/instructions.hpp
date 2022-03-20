@@ -20,6 +20,7 @@ enum ErrorCode
     CouldNotReadFile,
     GenericRunTimeError,
     DivisionByZero,
+    PowOfNegativenumber,
     SqrtOfNegativeNumber,
     Comment = 255,
 };
@@ -37,6 +38,8 @@ enum Instruction
     MUL,
     DIV,
     MOD, // Arithmetic
+    POW,
+    SQRT,
     NOT,
     OR,
     AND,
@@ -62,6 +65,8 @@ static const char *instructioString[] =
         "MUL",
         "DIV",
         "MOD",
+        "POW",
+        "SQRT",
         "NOT",
         "OR",
         "AND",
@@ -81,6 +86,7 @@ static const char *errorString[] =
         "Could not read file",
         "Unexpected runtime error",
         "Division by zero not allowed",
+        "Number raised to negative number not allowed",
         "Square root of negative numbers not allowed"};
 
 #endif

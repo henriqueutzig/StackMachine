@@ -36,6 +36,8 @@ private:
     void mul();
     void div();
     void mod();
+    void pow();
+    void sqrt();
 
     // misc
     void callOperation(Operation op);
