@@ -23,7 +23,7 @@ bool bitArithmetic::subtractor(bool b1, bool b2, bool &borrow)
     return diff;
 }
 
-bitset<16> bitArithmetic::adder16Bits(bitset<16> op1, bitset<16> op2)
+bitset<N> bitArithmetic::adderNBits(const bitset<N> &op1, const bitset<N> &op2)
 {
     bitset<16> res;
     bool c = 0;
@@ -34,7 +34,7 @@ bitset<16> bitArithmetic::adder16Bits(bitset<16> op1, bitset<16> op2)
     return res;
 }
 
-bitset<16> bitArithmetic::subtractor16Bits(bitset<16> op1, bitset<16> op2)
+bitset<N> bitArithmetic::subtractorNBits(const bitset<N> &op1, const bitset<N> &op2)
 {
     bitset<16> res;
     bool b = 0;
@@ -43,4 +43,97 @@ bitset<16> bitArithmetic::subtractor16Bits(bitset<16> op1, bitset<16> op2)
         res[i] = subtractor(op1[i], op2[i], b);
 
     return res;
+}
+
+// TODO: comparison operation does not include negative numbers
+
+bool bitArithmetic::lessOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
+{
+    for (int i = N - 1; i >= 0; i--)
+    {
+        if (op1[i] ^ op2[i])
+            return op2[i];
+    }
+    return true;
+}
+
+bool bitArithmetic::lessThen(const bitset<N> &op1, const bitset<N> &op2)
+{
+    for (int i = N - 1; i >= 0; i--)
+    {
+        if (op1[i] ^ op2[i])
+            return op2[i];
+    }
+    return false;
+}
+
+bool bitArithmetic::greaterOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
+{
+    for (int i = N - 1; i >= 0; i--)
+    {
+        if (op1[i] ^ op2[i])
+            return ~op2[i];
+    }
+    return true;
+}
+
+bool bitArithmetic::greaterThen(const bitset<N> &op1, const bitset<N> &op2)
+{
+    for (int i = N - 1; i >= 0; i--)
+    {
+        if (op1[i] ^ op2[i])
+            return ~op2[i];
+    }
+    return false;
+}
+
+bitset<N> bitArithmetic::abs(const bitset<N> &op)
+{
+    return lessThen(op, 0) ? subtractorNBits(0, op) : op;
+}
+
+int topBitSet(const bitset<N> &op)
+{
+    int i;
+    for (i = N - 1; i >= 0; i--)
+        if (op.test(i))
+            break;
+    return i;
+}
+
+bitset<N> bitArithmetic::divisionNbits(bitset<N> op1, bitset<N> op2, bitset<N> &r)
+{
+    bitset<N> q = 0;
+
+    bitset<N> absOp1 = abs(op1);
+    bitset<N> absOp2 = abs(op2);
+
+    int divisor_size = topBitSet(absOp2);
+
+    if (divisor_size < 0)
+        throw;
+
+    int bit;
+
+    while ((bit = topBitSet(absOp1)) >= divisor_size)
+    {
+        q.set(bit - divisor_size);
+        absOp1 ^= absOp2 << (bit - divisor_size);
+    }
+
+    r = absOp1;
+
+    if (lessThen(op1, 0))
+    {
+        r = subtractorNBits(0, r);
+        if (greaterThen(op2, 0))
+            q = subtractorNBits(0, q);
+    }
+    else
+    {
+        if (lessThen(op2, 0))
+            q = subtractorNBits(0, q);
+    }
+
+    return q;
 }

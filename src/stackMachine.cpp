@@ -109,12 +109,12 @@ void StackMachine::opMir()
 // =============== ARITHMETIC INSTRUCTIONS ===============
 void StackMachine::add()
 {
-    R = bitArithmetic::adder16Bits(stack[PC], stack[PC - 1]);
+    R = bitArithmetic::adderNBits(stack[PC], stack[PC - 1]);
 }
 
 void StackMachine::sub()
 {
-    R = bitArithmetic::subtractor16Bits(stack[PC], stack[PC - 1]);
+    R = bitArithmetic::subtractorNBits(stack[PC], stack[PC - 1]);
 }
 
 void StackMachine::mul()
@@ -126,11 +126,19 @@ void StackMachine::mul()
 
     for (int i = 0; i < INT_SIZE; i++)
         if (op1[i])
-            R = bitArithmetic::adder16Bits(R, op2 << i);
+            R = bitArithmetic::adderNBits(R, op2 << i);
 }
 
-void StackMachine::div() {}
-void StackMachine::mod() {}
+void StackMachine::div()
+{
+    bitset<INT_SIZE> r = 0;
+    R = bitArithmetic::divisionNbits(stack[PC], stack[PC - 1], r);
+}
+
+void StackMachine::mod()
+{
+    bitArithmetic::divisionNbits(stack[PC], stack[PC - 1], R);
+}
 
 // =============== MISC ===============
 void StackMachine::callOperation(Operation op)
