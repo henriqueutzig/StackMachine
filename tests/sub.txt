@@ -1,0 +1,7 @@
+CLEAR
+PUSH 4
+PUSH 2
+SUB
+
+PUSH $R
+OUT

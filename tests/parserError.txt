@@ -1,0 +1,36 @@
+PUSH $R
+PUSH 1
+PUSH -1
+PUSH 0
+PUSH dawdkawd
+
+PUSH 2a
+
+PUSHA
+PUSHR
+PUSH ;teste
+    ADD
+    SUB
+    MUL
+    DIV
+    MOD 
+    NOT
+    OR
+    AND
+
+
+
+    
+    MIR 
+    PUSH
+    POP 
+    OUT 
+    CLEAR
+    PUSHR
+TESTE ;AAAAAAA
+OUT ;AAAAAAA
+                              PUSH -33
+                              PUSH 123 123
+                              ADD 1
+      PUSH                    10
+    CLEAR                     
