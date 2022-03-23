@@ -6,7 +6,7 @@
 #include <bitset>
 #include <fstream>
 #include <sstream>
-#include <exception>
+#include <cstring>
 
 #include "instructions.hpp"
 
