@@ -25,10 +25,10 @@ bool bitArithmetic::subtractor(bool b1, bool b2, bool &borrow)
 
 bitset<N> bitArithmetic::adderNBits(const bitset<N> &op1, const bitset<N> &op2)
 {
-    bitset<16> res;
+    bitset<N> res;
     bool c = 0;
 
-    for (uint8_t i = 0; i < 16; i++)
+    for (uint8_t i = 0; i < N; i++)
         res[i] = adder(op1[i], op2[i], c);
 
     return res;
@@ -36,10 +36,10 @@ bitset<N> bitArithmetic::adderNBits(const bitset<N> &op1, const bitset<N> &op2)
 
 bitset<N> bitArithmetic::subtractorNBits(const bitset<N> &op1, const bitset<N> &op2)
 {
-    bitset<16> res;
+    bitset<N> res;
     bool b = 0;
 
-    for (uint8_t i = 0; i < 16; i++)
+    for (uint8_t i = 0; i < N; i++)
         res[i] = subtractor(op1[i], op2[i], b);
 
     return res;

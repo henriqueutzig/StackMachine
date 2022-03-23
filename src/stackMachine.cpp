@@ -8,7 +8,7 @@ StackMachine::StackMachine(/* args */)
         stack[i] = 0;
 }
 
-StackMachine::~StackMachine(){}
+StackMachine::~StackMachine() {}
 
 void StackMachine::run(vector<Operation> program)
 {
@@ -68,7 +68,11 @@ void StackMachine::push()
 void StackMachine::out()
 {
     int16_t outInt = (int)(stack[PC].to_ulong());
-    cout << "INT: " << outInt << " BINARY: " << stack[PC] << endl;
+
+    if (PC == 0)
+        cout << "EMPTY STACK" << endl;
+    else
+        cout << "INT: " << outInt << " BINARY: " << stack[PC] << endl;
 }
 
 // =============== LOGIC INSTRUCTIONS ===============
@@ -153,9 +157,7 @@ void StackMachine::pow()
     R = 1;
 
     for (size_t i = 0; bitArithmetic::lessThen(i, op2); i++)
-    {
         R = bitArithmetic::multiplicationNbits(op1, R);
-    }
 }
 
 // R = (int)op1^(-2)
