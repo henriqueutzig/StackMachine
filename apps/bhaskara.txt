@@ -14,7 +14,7 @@ PUSH    1 ; A
 PUSH    -3 ;C
 MUL
 POP
-POP
+pOp
 PUSH    $R
 
 PUSH    -4

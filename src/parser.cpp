@@ -52,6 +52,9 @@ Operation Parser::convertLineToInst(string line, uint32_t lineCount)
     if (words.size() == 0)
         throw Comment;
 
+    for (auto &&c : words[0])
+        c = toupper(c);
+
     if (!isStringValidInstruction(words[0]))
         throw InvalidInstruction;
 
