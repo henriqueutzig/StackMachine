@@ -1,0 +1,4 @@
+make.exe all -f c:\Users\EduardoLuis\Downloads\UFRGS\3º Semestre\Arquitetura e Organização de Computadores II\StackMachine\Users\EduardoLuis\Downloads\UFRGS\3º Semestre\Arquitetura e Organização de Computadores II\StackMachine\Makefile -C C:/ --print-data-base --no-builtin-variables --no-builtin-rules --question
+'make.exe' n�o � reconhecido como um comando interno
+ou externo, um programa oper�vel ou um arquivo em lotes.
+ 
