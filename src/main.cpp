@@ -6,10 +6,13 @@ using namespace std;
 int main(int argc, char *argv[])
 {
     StackMachine machine;
+    string filename;
 
     try
     {
-        vector<Operation> program = Parser::parseFile("apps/bhaskara.asm");
+        cout<<"Enter file name: ";
+        cin>>filename;
+        vector<Operation> program = Parser::parseFile("apps/"+filename+".asm");
         machine.run(program);
     }
     catch (const vector<MachineStatus> &parserErrors)
