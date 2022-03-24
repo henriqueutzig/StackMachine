@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
 
     try
     {
-        vector<Operation> program = Parser::parseFile("apps/bhaskara.txt");
+        vector<Operation> program = Parser::parseFile("apps/bhaskara.asm");
         machine.run(program);
     }
     catch (const vector<MachineStatus> &parserErrors)
