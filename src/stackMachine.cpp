@@ -12,13 +12,17 @@ StackMachine::~StackMachine() {}
 
 void StackMachine::run(vector<Operation> program)
 {
+    int order = 0;
     cout << "PROGRAM STARTED" << endl;
 
     for (auto &&op : program)
     {
+        cout << order << ": " << "Calling " << instructioString[op.instruction];
         try
         {
             callOperation(op);
+            printStack();
+            order++;
         }
         catch (const ErrorCode &err)
         {
@@ -48,6 +52,8 @@ void StackMachine::pop()
 
 void StackMachine::push(bitset<INT_SIZE> val)
 {
+    cout << " " << (int)(val.to_ulong());
+
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
 
@@ -70,9 +76,18 @@ void StackMachine::out()
     int16_t outInt = (int)(stack[PC].to_ulong());
 
     if (PC == 0)
-        cout << "EMPTY STACK" << endl;
+        cout << "\nEMPTY STACK" << endl;
     else
-        cout << "INT: " << outInt << " BINARY: " << stack[PC] << endl;
+        cout << "\nINT: " << outInt << " BINARY: " << stack[PC];
+}
+
+void StackMachine::printStack()
+{
+    cout << "\n\tSTACK:" << endl;
+    for (uint8_t i = PC; i > 0; i--)
+    {
+        cout << "\t" << "[ " << (int)(stack[i].to_ulong()) << " ]" << endl;
+    }
 }
 
 // =============== LOGIC INSTRUCTIONS ===============
