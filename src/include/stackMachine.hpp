@@ -25,6 +25,7 @@ private:
     void pop();                      // Empty stack, returns 2
     // IO
     void out();
+    void printStack();
     // Logic
     void opNot();
     void opOr();
