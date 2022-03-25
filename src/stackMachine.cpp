@@ -86,7 +86,7 @@ void StackMachine::out()
 void StackMachine::printStack()
 {
     cout << "\n\tSTACK:" << endl;
-    for (uint8_t i = PC; i > 0; i--)
+    for (uint16_t i = PC; i > 0; i--)
     {
         cout << "\t" << "[ " << (int16_t)(stack[i].to_ulong()) << " ]" << endl;
     }
