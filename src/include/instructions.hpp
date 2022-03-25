@@ -75,7 +75,7 @@ static const char *instructioString[] =
         "POP",
         "OUT",
         "CLEAR",
-        "PUSH $R"};
+        "PUSH"};
 
 static const char *errorString[] =
     {

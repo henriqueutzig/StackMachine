@@ -63,6 +63,8 @@ void StackMachine::push(bitset<INT_SIZE> val)
 
 void StackMachine::push()
 {
+    cout << " " << (int)(R.to_ulong());
+
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
 
