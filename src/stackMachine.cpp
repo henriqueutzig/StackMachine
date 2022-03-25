@@ -52,8 +52,7 @@ void StackMachine::pop()
 
 void StackMachine::push(bitset<INT_SIZE> val)
 {
-    int16_t value_p = (int)(val.to_ulong());
-    cout << " " << value_p;
+    cout << " " << (int16_t)(val.to_ulong());
 
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
@@ -64,8 +63,7 @@ void StackMachine::push(bitset<INT_SIZE> val)
 
 void StackMachine::push()
 {
-    int16_t value_r = (int)(R.to_ulong());
-    cout << " " << value_r;
+    cout << " " << (int16_t)(R.to_ulong());
 
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
@@ -90,8 +88,7 @@ void StackMachine::printStack()
     cout << "\n\tSTACK:" << endl;
     for (uint8_t i = PC; i > 0; i--)
     {
-        int16_t value = (int)(stack[i].to_ulong());
-        cout << "\t" << "[ " << value << " ]" << endl;
+        cout << "\t" << "[ " << (int16_t)(stack[i].to_ulong()) << " ]" << endl;
     }
 }
 
