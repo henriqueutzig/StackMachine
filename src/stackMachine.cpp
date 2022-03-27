@@ -17,11 +17,13 @@ void StackMachine::run(vector<Operation> program)
 
     for (auto &&op : program)
     {
-        cout << order << ": " << "Calling " << instructioString[op.instruction];
+        if (this->flags[Verbose] || this->flags[Debug])
+            cout << order << ". " << instructioString[op.instruction];
         try
         {
             callOperation(op);
-            printStack();
+            if (this->flags[Verbose] || this->flags[Debug])
+                printStack();
             order++;
         }
         catch (const ErrorCode &err)
@@ -30,7 +32,7 @@ void StackMachine::run(vector<Operation> program)
         }
     }
 
-    cout << "PROGRAM ENDED" << endl;
+    cout << "\nPROGRAM ENDED" << endl;
 }
 
 // =============== CONTROL INSTRUCTIONS ===============
@@ -52,7 +54,8 @@ void StackMachine::pop()
 
 void StackMachine::push(bitset<INT_SIZE> val)
 {
-    cout << " " << (int16_t)(val.to_ulong());
+    if (this->flags[Verbose] || this->flags[Debug])
+        cout << " " << (int16_t)(val.to_ulong());
 
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
@@ -63,7 +66,8 @@ void StackMachine::push(bitset<INT_SIZE> val)
 
 void StackMachine::push()
 {
-    cout << " " << (int16_t)(R.to_ulong());
+    if (this->flags[Verbose] || this->flags[Debug])
+        cout << " " << (int16_t)(R.to_ulong());
 
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
@@ -80,7 +84,7 @@ void StackMachine::out()
     if (PC == 0)
         cout << "\nEMPTY STACK" << endl;
     else
-        cout << "\nINT: " << outInt << " BINARY: " << stack[PC];
+        cout << "\t\nOUTPUT:\tINT: " << outInt << " || BINARY: " << stack[PC];
 }
 
 void StackMachine::printStack()
@@ -88,7 +92,8 @@ void StackMachine::printStack()
     cout << "\n\tSTACK:" << endl;
     for (uint16_t i = PC; i > 0; i--)
     {
-        cout << "\t" << "[ " << (int16_t)(stack[i].to_ulong()) << " ]" << endl;
+        cout << "\t"
+             << "[ " << (int16_t)(stack[i].to_ulong()) << " ]" << endl;
     }
 }
 
@@ -261,4 +266,14 @@ void StackMachine::callOperation(Operation op)
     default:
         throw GenericRunTimeError;
     }
+}
+
+void StackMachine::setVerbose()
+{
+    this->flags[Verbose] = true;
+}
+
+void StackMachine::setDebug()
+{
+    this->flags[Debug] = true;
 }

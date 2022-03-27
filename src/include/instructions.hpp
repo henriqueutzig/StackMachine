@@ -10,6 +10,12 @@
 using namespace std;
 #define INT_SIZE 16
 
+enum Flags
+{
+    Verbose,
+    Debug
+};
+
 enum ErrorCode
 {
     SyntaxError,

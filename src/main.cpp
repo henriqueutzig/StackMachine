@@ -10,9 +10,25 @@ int main(int argc, char *argv[])
 
     try
     {
-        cout<<"Enter file name: ";
-        cin>>filename;
-        vector<Operation> program = Parser::parseFile("apps/"+filename+".asm");
+        if (argc < 2)
+        {
+            cout << "Enter file name: ";
+            cin >> filename;
+        }
+        else
+        {
+            for (int i = 1; i < argc; i++)
+                if (strlen(argv[i]) > 2)
+                    filename = argv[i];
+                else
+                {
+                    if (strcasecmp(argv[i], "-v"))
+                        machine.setVerbose();
+                    if (strcasecmp(argv[i], "-d"))
+                        machine.setDebug();
+                }
+        }
+        vector<Operation> program = Parser::parseFile(filename);
         machine.run(program);
     }
     catch (const vector<MachineStatus> &parserErrors)

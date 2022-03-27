@@ -18,6 +18,8 @@ private:
     uint32_t lineInFile = 0;
     bitset<INT_SIZE> R = 0;
     bitset<INT_SIZE> stack[STACK_SIZE] = {0};
+    // Flags
+    bool flags[2];
     // Controll
     void clear();
     void push(bitset<INT_SIZE> val); // Stack full, returns value 1
@@ -46,6 +48,9 @@ private:
 public:
     StackMachine(/* args */);
     void run(vector<Operation> program);
+    // set flags
+    void setVerbose();
+    void setDebug();
     ~StackMachine();
 };
 
