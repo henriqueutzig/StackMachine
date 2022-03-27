@@ -18,13 +18,18 @@ void StackMachine::run(vector<Operation> program)
     for (auto &&op : program)
     {
         if (this->flags[Verbose] || this->flags[Debug])
-            cout << order << ". " << instructioString[op.instruction];
+            cout << order+1 << ". " << instructioString[op.instruction];
         try
         {
             callOperation(op);
             if (this->flags[Verbose] || this->flags[Debug])
                 printStack();
             order++;
+            if (this->flags[Debug])
+            {
+                cout << "Press 'ENTER' to continue.. \n";
+                cin.get();
+            }
         }
         catch (const ErrorCode &err)
         {
@@ -67,7 +72,7 @@ void StackMachine::push(bitset<INT_SIZE> val)
 void StackMachine::push()
 {
     if (this->flags[Verbose] || this->flags[Debug])
-        cout << " " << (int16_t)(R.to_ulong());
+        cout << " $R" ;//<< (int16_t)(R.to_ulong());
 
     if (PC >= STACK_SIZE - 1)
         throw FullStack;
@@ -89,7 +94,7 @@ void StackMachine::out()
 
 void StackMachine::printStack()
 {
-    cout << "\n\tSTACK:" << endl;
+    cout << "\n\tSTACK:\tR: " << (int16_t)(this->R.to_ulong()) << endl;
     for (uint16_t i = PC; i > 0; i--)
     {
         cout << "\t"

@@ -12,8 +12,8 @@ using namespace std;
 
 enum Flags
 {
-    Verbose,
-    Debug
+    Verbose=0,
+    Debug=1
 };
 
 enum ErrorCode

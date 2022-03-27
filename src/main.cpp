@@ -22,10 +22,10 @@ int main(int argc, char *argv[])
                     filename = argv[i];
                 else
                 {
-                    if (strcasecmp(argv[i], "-v"))
-                        machine.setVerbose();
-                    if (strcasecmp(argv[i], "-d"))
+                    if (strcasecmp(argv[i], "-d") == 0)
                         machine.setDebug();
+                    if (strcasecmp(argv[i], "-v") == 0)
+                        machine.setVerbose();
                 }
         }
         vector<Operation> program = Parser::parseFile(filename);
