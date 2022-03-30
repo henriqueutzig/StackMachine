@@ -1,4 +1,5 @@
 #include <iostream>
+#include <strings.h>
 #include "include/stackMachine.hpp"
 #include "include/parser.hpp"
 using namespace std;

@@ -67,6 +67,7 @@
         "scoped_allocator": "cpp",
         "thread": "cpp",
         "typeindex": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "TEST.C": "cpp"
     }
 }

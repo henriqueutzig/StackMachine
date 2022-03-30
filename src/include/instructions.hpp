@@ -12,8 +12,8 @@ using namespace std;
 
 enum Flags
 {
-    Verbose=0,
-    Debug=1
+    Verbose = 0,
+    Debug = 1
 };
 
 enum ErrorCode
@@ -54,7 +54,10 @@ enum Instruction
     POP, // Control
     OUT, // IO
     CLEAR,
-    PUSHR // overload de PUSH para argumento $R, "PUSHR" eh invalido no assembly
+    JMP,
+    JZ,
+    JN,
+    PUSHR, // overload de PUSH para argumento $R, "PUSHR" eh invalido no assembly
 };
 
 struct Operation
@@ -81,7 +84,11 @@ static const char *instructioString[] =
         "POP",
         "OUT",
         "CLEAR",
-        "PUSH"};
+        "JMP",
+        "JZ",
+        "JN",
+        "PUSH",
+};
 
 static const char *errorString[] =
     {

@@ -23,7 +23,7 @@ private:
 public:
     // read
     static vector<Operation> parseFile(string inputFile);
-    Parser(/* args */);
+    Parser();
     ~Parser();
 };
 

@@ -37,7 +37,7 @@ vector<string> Parser::splitLine(string line)
 
 bool Parser::isStringValidInstruction(string instructionString)
 {
-    for (size_t i = ADD; i < PUSHR; i++)
+    for (size_t i = ADD; i < JN; i++)
         if (instructionString == instructioString[i])
             return true;
 
@@ -70,6 +70,18 @@ Operation Parser::convertLineToInst(string line, uint32_t lineCount)
             throw InvalidArgument;
 
         return (Operation){lineCount, PUSH, stoi(words[1])};
+    }
+    else if (words[0] == instructioString[JMP] || words[0] == instructioString[JZ] || words[0] == instructioString[JN])
+    {
+        if (words.size() != 2)
+            throw SyntaxError;
+
+        if (!isNumber(words[1]))
+            throw InvalidArgument;
+
+        Instruction instructon = words[0] == instructioString[JMP] ? JMP : words[0] == instructioString[JZ] ? JZ
+                                                                                                            : JN;
+        return (Operation){lineCount, instructon, stoi(words[1])};
     }
     else if (words.size() > 1)
         throw SyntaxError;
