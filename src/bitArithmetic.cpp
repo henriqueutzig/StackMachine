@@ -45,6 +45,15 @@ bitset<N> bitArithmetic::subtractorNBits(const bitset<N> &op1, const bitset<N> &
     return res;
 }
 
+bool bitArithmetic::isZero(const bitset<N> &op)
+{
+    for (uint8_t i = 0; i < N; i++)
+        if (op[i] & op[i])
+            return false;
+
+    return true;
+}
+
 bool bitArithmetic::lessOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
 {
     bitset<N> res = subtractorNBits(op1, op2);

@@ -16,6 +16,8 @@ struct bitArithmetic
 
     static bitset<N> subtractorNBits(const bitset<N> &op1, const bitset<N> &op2);
 
+    static bool isZero(const bitset<N> &op);
+
     static bool lessOrEqThen(const bitset<N> &op1, const bitset<N> &op2);
 
     static bool lessThen(const bitset<N> &op1, const bitset<N> &op2);

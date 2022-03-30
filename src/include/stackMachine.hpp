@@ -13,16 +13,14 @@
 class StackMachine
 {
 private:
-    // Vars
-    uint8_t PC = 0; // PC é o stackPointer
+    uint8_t SP = 0;
+    uint16_t PC = 0;
     uint32_t lineInFile = 0;
     bitset<INT_SIZE> R = 0;
-    bool Z = 0;
-    bool flag_JZ = 0;
-    bool Ng = 0;
-    bool flag_JN = 0;
-    uint16_t dec = 0;
+    bool ZF = 0;
+    bool NF = 0;
     bitset<INT_SIZE> stack[STACK_SIZE] = {0};
+
     // Flags
     bool flags[2];
     // Controll
@@ -47,9 +45,10 @@ private:
     void pow();
     void sqrt();
 
-    // jumps
-    void jump_z(bitset<INT_SIZE> val);
-    void jump_n(bitset<INT_SIZE> val);
+    // branches
+    void jmp(bitset<INT_SIZE> val);
+    void jz(bitset<INT_SIZE> val);
+    void jn(bitset<INT_SIZE> val);
 
     // misc
     void callOperation(Operation op);
