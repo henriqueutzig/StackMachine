@@ -4,6 +4,9 @@ StackMachine::StackMachine(/* args */)
 {
     PC = 0;
     R = 0;
+    Ng = 0;
+    Z = 0;
+    dec = 0;
     for (uint8_t i = 0; i < STACK_SIZE; i++)
         stack[i] = 0;
 }
@@ -21,7 +24,30 @@ void StackMachine::run(vector<Operation> program)
             cout << order+1 << ". " << instructioString[op.instruction];
         try
         {
+            //////////////////// CHECK
+            if(flag_JZ)
+            {
+                op = program[order - dec];
+                flag_JZ = 0;
+            }
+            //////////////////// CHECK
+
             callOperation(op);
+            int16_t rInt = (int16_t) R.to_ulong();
+            if (rInt == 0)
+            {
+                Z = 1;
+                Ng = 0;
+            }
+            else if (rInt < 0) 
+            {
+                Z = 0;
+                Ng = 1;
+            }
+            else
+            {
+                Z = Ng = 0;
+            }
             if (this->flags[Verbose] || this->flags[Debug])
                 printStack();
             order++;
@@ -94,7 +120,7 @@ void StackMachine::out()
 
 void StackMachine::printStack()
 {
-    cout << "\n\tSTACK:\tR: " << (int16_t)(this->R.to_ulong()) << endl;
+    cout << "\n\tSTACK:\tR: " << (int16_t)(this->R.to_ulong()) << "\tZ: " << Z << "\tN: " << Ng << endl;
     for (uint16_t i = PC; i > 0; i--)
     {
         cout << "\t"
@@ -214,6 +240,29 @@ void StackMachine::sqrt()
     R = bitArithmetic::subtractorNBits(i, 1);
 }
 
+// =============== JUMPS ===============
+/////////////////////////////////////////////// CHECK
+void StackMachine::jump_z(bitset<INT_SIZE> val)
+{
+    if (this->flags[Verbose] || this->flags[Debug])
+        cout << " " << (int16_t)(val.to_ulong());
+
+    if (Z)
+    {
+        flag_JZ = 1;
+        dec = val.to_ulong();
+    }
+}
+
+void StackMachine::jump_n(bitset<INT_SIZE> val)
+{
+    if (this->flags[Verbose] || this->flags[Debug])
+        cout << " " << (int16_t)(val.to_ulong());
+
+    if (Ng)
+        dec = val.to_ulong();
+}
+/////////////////////////////////////////////// CHECK
 // =============== MISC ===============
 void StackMachine::callOperation(Operation op)
 {
@@ -266,6 +315,12 @@ void StackMachine::callOperation(Operation op)
         break;
     case PUSHR:
         push();
+        break;
+    case JZ:
+        jump_z(op.argument);
+        break;
+    case JN:
+        jump_n(op.argument);
         break;
 
     default:

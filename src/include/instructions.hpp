@@ -54,7 +54,9 @@ enum Instruction
     POP, // Control
     OUT, // IO
     CLEAR,
-    PUSHR // overload de PUSH para argumento $R, "PUSHR" eh invalido no assembly
+    PUSHR, // overload de PUSH para argumento $R, "PUSHR" eh invalido no assembly
+    JZ,
+    JN
 };
 
 struct Operation
@@ -81,7 +83,9 @@ static const char *instructioString[] =
         "POP",
         "OUT",
         "CLEAR",
-        "PUSH"};
+        "PUSH",
+        "JZ",
+        "JN"};
 
 static const char *errorString[] =
     {
