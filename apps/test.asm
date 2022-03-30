@@ -6,5 +6,5 @@ SUB
 POP
 PUSH $R
 JZ 11
-JMP 2 ; executa a proxima instrucao apos a indicada. 2 eh a instrucao 2 comecando por 0
-; neste caso eh a PUSH 10, entao pula pra executar SUB
+JMP 3 ; executa a instrucao indicada. 3 eh a instrucao 3 comecando por 0 (nao eh a linha no arquivo)
+; neste caso eh a SUB, entao pula pra SUB e executa ela.

@@ -231,7 +231,7 @@ void StackMachine::jmp(bitset<INT_SIZE> val)
     if (this->flags[Verbose] || this->flags[Debug])
         cout << " " << (int16_t)(val.to_ulong());
 
-    PC = val.to_ulong();
+    PC = val.to_ulong() - 1;
 }
 
 void StackMachine::jz(bitset<INT_SIZE> val)
@@ -240,7 +240,7 @@ void StackMachine::jz(bitset<INT_SIZE> val)
         cout << " " << (int16_t)(val.to_ulong());
 
     if (ZF)
-        PC = val.to_ulong();
+        PC = val.to_ulong() - 1;
 }
 
 void StackMachine::jn(bitset<INT_SIZE> val)
@@ -249,7 +249,7 @@ void StackMachine::jn(bitset<INT_SIZE> val)
         cout << " " << (int16_t)(val.to_ulong());
 
     if (ZF)
-        PC = val.to_ulong();
+        PC = val.to_ulong() - 1;
 }
 
 // =============== MISC ===============
