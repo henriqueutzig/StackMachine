@@ -1,4 +1,5 @@
 #include "include/parser.hpp"
+#include <iostream>
 
 // TODO: checar se o tamanho do int eh valido
 bool Parser::isNumber(const string &str)
@@ -44,12 +45,16 @@ bool Parser::isStringValidInstruction(string instructionString)
     return false;
 }
 
-Operation Parser::convertLineToInst(string line, uint32_t lineCount)
+Operation Parser::convertLineToInst(string line, uint16_t lineCount, PreParser preParser)
 {
     vector<string> words = splitLine(line);
 
     // caso de uma linha vazia ou so de comentario
     if (words.size() == 0)
+        throw Comment;
+
+    // caso de uma linha indentificada no pre parse
+    if (find(preParser.lines.begin(), preParser.lines.end(), lineCount) != preParser.lines.end())
         throw Comment;
 
     for (auto &&c : words[0])
@@ -67,7 +72,13 @@ Operation Parser::convertLineToInst(string line, uint32_t lineCount)
             return (Operation){lineCount, PUSHR, 0};
 
         if (!isNumber(words[1]))
-            throw InvalidArgument;
+        {
+            auto constantIterator = preParser.constants.find(words[1]);
+            if (constantIterator == preParser.constants.end())
+                throw InvalidArgument;
+
+            return (Operation){lineCount, PUSH, constantIterator->second};
+        }
 
         return (Operation){lineCount, PUSH, stoi(words[1])};
     }
@@ -93,26 +104,76 @@ Operation Parser::convertLineToInst(string line, uint32_t lineCount)
     return (Operation){lineCount, ADD, 0}; // default return
 }
 
+PreParser Parser::preParse(ifstream &input)
+{
+    PreParser res;
+    uint16_t lineCount = 0;
+
+    input.clear();
+    input.seekg(0, ios::beg);
+
+    for (string line; getline(input, line);)
+    {
+        vector<string> words = splitLine(line);
+        lineCount++;
+
+        // CONSTANT_NAME EQU expression
+        if (words.size() == 3)
+        {
+            for (auto &&c : words[1])
+                c = toupper(c);
+
+            if (words[1] == CONSTANT_WORD && isNumber(words[2]))
+            {
+                res.constants[words[0]] = stoi(words[2]);
+                res.lines.push_back(lineCount);
+            }
+
+            continue;
+        }
+
+        // LABEL:
+        if (words.size() == 1 && words[0].back() == ':')
+        {
+            words[0].pop_back();
+
+            if (res.labels.find(words[0]) != res.labels.end())
+                throw RepeatedLabel;
+
+            res.labels[words[0]] = lineCount;
+            res.lines.push_back(lineCount);
+            continue;
+        }
+    }
+
+    input.clear();
+    input.seekg(0, ios::beg);
+
+    return res;
+}
+
 vector<Operation> Parser::parseFile(string inputFile)
 {
-    ifstream inputEx(inputFile);
-    uint32_t lineCount = 0;
+    ifstream input(inputFile);
+    uint16_t lineCount = 0;
     vector<MachineStatus> status;
     vector<Operation> program;
 
-    if (!inputEx.good())
+    if (!input.good())
     {
-        inputEx.close();
+        input.close();
         status.push_back({0, CouldNotReadFile});
         throw status;
     }
 
-    for (string line; getline(inputEx, line);)
+    PreParser preParser = preParse(input);
+
+    for (string line; getline(input, line);)
     {
         lineCount++;
         try
         {
-            Operation lineInst = convertLineToInst(line, lineCount);
+            Operation lineInst = convertLineToInst(line, lineCount, preParser);
             program.push_back(lineInst);
         }
         catch (const ErrorCode err)
@@ -122,7 +183,7 @@ vector<Operation> Parser::parseFile(string inputFile)
         }
     }
 
-    inputEx.close();
+    input.close();
 
     if (status.size() > 0)
         throw status;

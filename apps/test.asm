@@ -1,7 +1,9 @@
 ;loop example
+TOTAL_LOOP equ 11
+
 CLEAR 
 PUSH 1
-PUSH 10
+PUSH TOTAL_LOOP
 SUB
 POP
 PUSH $R
