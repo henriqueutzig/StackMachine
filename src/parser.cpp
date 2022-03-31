@@ -38,7 +38,7 @@ vector<string> Parser::splitLine(string line)
 
 bool Parser::isStringValidInstruction(string instructionString)
 {
-    for (size_t i = ADD; i < JN; i++)
+    for (size_t i = ADD; i < PUSHR; i++)
         if (instructionString == instructioString[i])
             return true;
 
