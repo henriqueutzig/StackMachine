@@ -1,0 +1,7 @@
+CLEAR
+
+PUSH 3
+PUSH 8
+div
+PUSH $R
+OUT

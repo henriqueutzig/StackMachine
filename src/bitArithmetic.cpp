@@ -60,7 +60,18 @@ bool bitArithmetic::lessOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
 
     if (res == 0)
         return true;
-    return subtractorNBits(op1, op2)[N - 1];
+
+    return res[N - 1];
+}
+
+bool bitArithmetic::lessOrEqThenABS(const bitset<N> &op1, const bitset<N> &op2)
+{
+    for (int i = N - 1; i >= 0; i--)
+    {
+        if (op1[i] ^ op2[i])
+            return op2[i];
+    }
+    return true;
 }
 
 bool bitArithmetic::lessThen(const bitset<N> &op1, const bitset<N> &op2)
@@ -75,7 +86,7 @@ bool bitArithmetic::greaterOrEqThen(const bitset<N> &op1, const bitset<N> &op2)
     if (res == 0)
         return true;
 
-    return subtractorNBits(op2, op1)[N - 1];
+    return res[N - 1];
 }
 
 bool bitArithmetic::greaterThen(const bitset<N> &op1, const bitset<N> &op2)
@@ -97,15 +108,6 @@ bitset<N> bitArithmetic::multiplicationNbits(bitset<N> op1, bitset<N> op2)
     return res;
 }
 
-int topBitSet(const bitset<N> &op)
-{
-    int i;
-    for (i = N - 1; i >= 0; i--)
-        if (op[i])
-            break;
-    return i;
-}
-
 bitset<N> bitArithmetic::divisionNbits(bitset<N> op1, bitset<N> op2, bitset<N> &r)
 {
     bitset<N> q = 0;
@@ -113,17 +115,16 @@ bitset<N> bitArithmetic::divisionNbits(bitset<N> op1, bitset<N> op2, bitset<N> &
     bitset<N> absOp1 = abs(op1);
     bitset<N> absOp2 = abs(op2);
 
-    int divisor_size = topBitSet(absOp2);
-
-    if (divisor_size < 0)
+    if (isZero(absOp2))
         throw 0;
 
-    int bit;
-
-    while ((bit = topBitSet(absOp1)) >= divisor_size)
+    for (int16_t i = N - 1; i >= 0; i--)
     {
-        q.set(bit - divisor_size);
-        absOp1 ^= absOp2 << (bit - divisor_size);
+        if (lessOrEqThenABS(absOp2 << i, absOp1))
+        {
+            absOp1 = subtractorNBits(absOp1, absOp2 << i);
+            q = adderNBits(q, 1 << i);
+        }
     }
 
     r = absOp1;
