@@ -58,6 +58,8 @@ enum Instruction
     JMP,
     JZ,
     JN,
+    STORE,
+    LOAD,
     PUSHR, // overload de PUSH para argumento $R, "PUSHR" eh invalido no assembly
 };
 
@@ -88,6 +90,8 @@ static const char *instructioString[] =
         "JMP",
         "JZ",
         "JN",
+        "STORE",
+        "LOAD",
         "PUSH",
 };
 

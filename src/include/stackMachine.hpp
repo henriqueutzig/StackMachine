@@ -17,6 +17,8 @@ private:
     uint16_t PC = 0;
     uint32_t lineInFile = 0;
     bitset<INT_SIZE> R = 0;
+    bitset<INT_SIZE> M = 0;
+
     bool ZF = 0;
     bool NF = 0;
     bitset<INT_SIZE> stack[STACK_SIZE] = {0};
@@ -49,6 +51,10 @@ private:
     void jmp(bitset<INT_SIZE> val);
     void jz(bitset<INT_SIZE> val);
     void jn(bitset<INT_SIZE> val);
+
+    // register
+    void store();
+    void load();
 
     // misc
     void callOperation(Operation op);
