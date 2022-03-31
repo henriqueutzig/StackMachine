@@ -5,6 +5,7 @@ StackMachine::StackMachine()
     SP = 0;
     PC = 0;
     R = 0;
+    M = 0;
     NF = 0;
     ZF = 0;
 
@@ -104,7 +105,7 @@ void StackMachine::out()
 
 void StackMachine::printStack()
 {
-    cout << "\n\tSTACK:\tR: " << (int16_t)(this->R.to_ulong()) << "\tZF: " << ZF << "\tNF: " << NF << endl;
+    cout << "\n\tSTACK:\tR: " << (int16_t)(this->R.to_ulong()) << "\tM: " << (int16_t)(this->M.to_ulong()) << "\tZF: " << ZF << "\tNF: " << NF << endl;
     for (uint16_t i = SP; i > 0; i--)
     {
         cout << "\t"
@@ -252,6 +253,18 @@ void StackMachine::jn(bitset<INT_SIZE> val)
         PC = val.to_ulong() - 1;
 }
 
+// =============== REGISTER ===============
+
+void StackMachine::store()
+{
+    M = stack[SP];
+}
+
+void StackMachine::load()
+{
+    push(M);
+}
+
 // =============== MISC ===============
 void StackMachine::callOperation(Operation op)
 {
@@ -313,6 +326,12 @@ void StackMachine::callOperation(Operation op)
         break;
     case JN:
         jn(op.argument);
+        break;
+    case LOAD:
+        load();
+        break;
+    case STORE:
+        store();
         break;
 
     default:
