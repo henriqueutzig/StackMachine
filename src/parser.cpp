@@ -45,7 +45,7 @@ bool Parser::isStringValidInstruction(string instructionString)
     return false;
 }
 
-Operation Parser::convertLineToInst(string line, uint16_t lineCount, PreParser preParser)
+Operation Parser::convertLineToInst(string line, uint16_t fileLine, PreParser preParser)
 {
     vector<string> words = splitLine(line);
 
@@ -54,7 +54,7 @@ Operation Parser::convertLineToInst(string line, uint16_t lineCount, PreParser p
         throw Comment;
 
     // caso de uma linha indentificada no pre parse
-    if (find(preParser.lines.begin(), preParser.lines.end(), lineCount) != preParser.lines.end())
+    if (find(preParser.lines.begin(), preParser.lines.end(), fileLine) != preParser.lines.end())
         throw Comment;
 
     for (auto &&c : words[0])
@@ -69,7 +69,7 @@ Operation Parser::convertLineToInst(string line, uint16_t lineCount, PreParser p
             throw SyntaxError;
 
         if (words[1] == "$R")
-            return (Operation){lineCount, PUSHR, 0};
+            return (Operation){fileLine, PUSHR, 0};
 
         if (!isNumber(words[1]))
         {
@@ -77,37 +77,48 @@ Operation Parser::convertLineToInst(string line, uint16_t lineCount, PreParser p
             if (constantIterator == preParser.constants.end())
                 throw InvalidArgument;
 
-            return (Operation){lineCount, PUSH, constantIterator->second};
+            return (Operation){fileLine, PUSH, constantIterator->second};
         }
 
-        return (Operation){lineCount, PUSH, stoi(words[1])};
+        return (Operation){fileLine, PUSH, stoi(words[1])};
     }
     else if (words[0] == instructioString[JMP] || words[0] == instructioString[JZ] || words[0] == instructioString[JN])
     {
         if (words.size() != 2)
             throw SyntaxError;
 
-        if (!isNumber(words[1]))
-            throw InvalidArgument;
-
         Instruction instructon = words[0] == instructioString[JMP] ? JMP : words[0] == instructioString[JZ] ? JZ
                                                                                                             : JN;
-        return (Operation){lineCount, instructon, stoi(words[1])};
+
+        if (!isNumber(words[1]))
+        {
+            auto labelIterator = preParser.labels.find(words[1]);
+            if (labelIterator == preParser.labels.end())
+                throw InvalidArgument;
+
+            // seta a linha arquivo da label como negativa para diferenciar de valores fixos
+            return (Operation){fileLine, instructon, -labelIterator->second};
+        }
+
+        if (stoi(words[1]) < 0)
+            throw InvalidArgument;
+
+        return (Operation){fileLine, instructon, stoi(words[1])};
     }
     else if (words.size() > 1)
         throw SyntaxError;
 
     for (size_t i = ADD; i < PUSHR; i++)
         if (words[0] == instructioString[i])
-            return (Operation){lineCount, (Instruction)i, 0};
+            return (Operation){fileLine, (Instruction)i, 0};
 
-    return (Operation){lineCount, ADD, 0}; // default return
+    return (Operation){fileLine, ADD, 0}; // default return
 }
 
 PreParser Parser::preParse(ifstream &input)
 {
     PreParser res;
-    uint16_t lineCount = 0;
+    uint16_t fileLine = 0;
 
     input.clear();
     input.seekg(0, ios::beg);
@@ -115,7 +126,7 @@ PreParser Parser::preParse(ifstream &input)
     for (string line; getline(input, line);)
     {
         vector<string> words = splitLine(line);
-        lineCount++;
+        fileLine++;
 
         // CONSTANT_NAME EQU expression
         if (words.size() == 3)
@@ -126,13 +137,13 @@ PreParser Parser::preParse(ifstream &input)
             if (words[1] == CONSTANT_WORD && isNumber(words[2]))
             {
                 res.constants[words[0]] = stoi(words[2]);
-                res.lines.push_back(lineCount);
+                res.lines.push_back(fileLine);
             }
 
             continue;
         }
 
-        // LABEL:
+        // LABEL_EXAMPLE:
         if (words.size() == 1 && words[0].back() == ':')
         {
             words[0].pop_back();
@@ -140,8 +151,8 @@ PreParser Parser::preParse(ifstream &input)
             if (res.labels.find(words[0]) != res.labels.end())
                 throw RepeatedLabel;
 
-            res.labels[words[0]] = lineCount;
-            res.lines.push_back(lineCount);
+            res.labels[words[0]] = fileLine;
+            res.lines.push_back(fileLine);
             continue;
         }
     }
@@ -155,7 +166,7 @@ PreParser Parser::preParse(ifstream &input)
 vector<Operation> Parser::parseFile(string inputFile)
 {
     ifstream input(inputFile);
-    uint16_t lineCount = 0;
+    uint16_t fileLine = 0;
     vector<MachineStatus> status;
     vector<Operation> program;
 
@@ -170,16 +181,40 @@ vector<Operation> Parser::parseFile(string inputFile)
 
     for (string line; getline(input, line);)
     {
-        lineCount++;
+        fileLine++;
         try
         {
-            Operation lineInst = convertLineToInst(line, lineCount, preParser);
-            program.push_back(lineInst);
+            Operation operation = convertLineToInst(line, fileLine, preParser);
+            program.push_back(operation);
         }
         catch (const ErrorCode err)
         {
             if (err != Comment)
-                status.push_back({lineCount, err});
+                status.push_back({fileLine, err});
+        }
+    }
+
+    // conversao dos branches negativos para program lines (branches negativos sao referentes as fileLines)
+    for (Operation &op : program)
+    {
+        if (op.instruction == JMP || op.instruction == JN || op.instruction == JZ)
+        {
+            int16_t labelFileLine = (int)(op.argument.to_ulong());
+
+            if (labelFileLine < 0)
+            {
+                uint16_t programLine = 0;
+                for (Operation opAux : program)
+                {
+                    if (-labelFileLine < opAux.lineInFile)
+                    {
+                        op.argument = programLine;
+                        break;
+                    }
+
+                    programLine++;
+                }
+            }
         }
     }
 

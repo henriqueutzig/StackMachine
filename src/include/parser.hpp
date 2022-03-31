@@ -9,7 +9,6 @@
 #include <cstring>
 #include <algorithm>
 #include <unordered_map>
-
 #include "instructions.hpp"
 
 #define CONSTANT_WORD "EQU"
@@ -26,7 +25,7 @@ struct PreParser
 class Parser
 {
 private:
-    static Operation convertLineToInst(string line, uint16_t lineCount, PreParser preParser);
+    static Operation convertLineToInst(string line, uint16_t fileLine, PreParser preParser);
     static bool isStringValidInstruction(string instructionString);
     static bool isNumber(const string &str);
     static vector<string> splitLine(string line);
