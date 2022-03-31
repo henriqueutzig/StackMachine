@@ -248,7 +248,7 @@ void StackMachine::jn(bitset<INT_SIZE> val)
     if (this->flags[Verbose] || this->flags[Debug])
         cout << " " << (int16_t)(val.to_ulong());
 
-    if (ZF)
+    if (NF)
         PC = val.to_ulong() - 1;
 }
 
