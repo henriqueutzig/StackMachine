@@ -113,6 +113,6 @@ PUSH    $R
 
 ; --------------- resultados ---------------;
 
-OUT     ; raiz 2
-POP
-OUT     ; raiz 1
+; OUT     ; raiz 2
+; POP
+; OUT     ; raiz 1
