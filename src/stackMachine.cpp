@@ -56,7 +56,14 @@ void StackMachine::run(vector<Operation> program)
 // =============== CONTROL INSTRUCTIONS ===============
 void StackMachine::clear()
 {
-    StackMachine();
+    SP = 0;
+    R = 0;
+    M = 0;
+    NF = 0;
+    ZF = 0;
+
+    for (uint8_t i = 0; i < STACK_SIZE; i++)
+        stack[i] = 0;
 }
 
 void StackMachine::pop()
