@@ -2,7 +2,7 @@
 This project is a modded [Stack Machine](https://en.wikipedia.org/wiki/Stack_machine) simulator developed for 
 INF01112 - Architecture and Organization of Computers II class at [UFRGS](http://www.ufrgs.br/english/home).
 
-Made by [Eduardo Luis Marques](https://github.com/eduardo-marques8), [Herique Utzig](https://github.com/henriqueutzig) and [Pedro Afonso Klein](https://github.com/PedroKlein).
+Made by [Eduardo Luis Marques](https://github.com/eduardo-marques8), [Henrique Utzig](https://github.com/henriqueutzig) and [Pedro Afonso Klein](https://github.com/PedroKlein).
 
 ---
 
@@ -17,7 +17,7 @@ Made by [Eduardo Luis Marques](https://github.com/eduardo-marques8), [Herique Ut
   ```bash
   stackMachine
   ```
-  or with optional parameters, where **-d** is debbug mode and **-v** is verbose mode
+  or with optional parameters, where **-d** is debug mode and **-v** is verbose mode
    ```bash
   stackMachine filePath_to_execute -d -v
   ```
