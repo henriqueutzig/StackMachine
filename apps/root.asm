@@ -1,3 +1,9 @@
+;n = 9
+;r = n
+;while (r * r > n)
+;   r = r - 1
+;print(r)
+
 n equ 9
 
     CLEAR
