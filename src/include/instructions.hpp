@@ -21,7 +21,6 @@ enum ErrorCode
     SyntaxError,
     InvalidInstruction,
     InvalidArgument,
-    RepeatedLabel,
     EmptyStack,
     FullStack,
     CouldNotReadFile,
@@ -29,6 +28,7 @@ enum ErrorCode
     DivisionByZero,
     PowOfNegativenumber,
     SqrtOfNegativeNumber,
+    RepeatedLabel,
     Comment = 255,
 };
 
@@ -100,13 +100,14 @@ static const char *errorString[] =
         "Syntax error",
         "Invalid instruction",
         "Invalid argument",
-        "Repeated label",
         "Stack already empty",
         "Stack overflow",
         "Could not read file",
         "Unexpected runtime error",
         "Division by zero not allowed",
         "Number raised to negative number not allowed",
-        "Square root of negative numbers not allowed"};
+        "Square root of negative numbers not allowed",
+        "Repeated label",
+};
 
 #endif

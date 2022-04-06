@@ -1,5 +1,5 @@
 #include <iostream>
-#include <strings.h>
+#include <string.h>
 #include "include/stackMachine.hpp"
 #include "include/parser.hpp"
 using namespace std;
@@ -23,9 +23,9 @@ int main(int argc, char *argv[])
                     filename = argv[i];
                 else
                 {
-                    if (strcasecmp(argv[i], "-d") == 0)
+                    if (strcmp(argv[i], "-d") == 0)
                         machine.setDebug();
-                    if (strcasecmp(argv[i], "-v") == 0)
+                    if (strcmp(argv[i], "-v") == 0)
                         machine.setVerbose();
                 }
         }
@@ -41,7 +41,8 @@ int main(int argc, char *argv[])
     }
     catch (const MachineStatus &runTimeError)
     {
-        cout << "RUNTIME ERROR (Line: " << runTimeError.line << ","
+        cout << endl
+             << "RUNTIME ERROR (Line: " << runTimeError.line << ","
              << " ErrorCode: " << runTimeError.errorCode << ","
              << " Message: " << errorString[runTimeError.errorCode] << ")" << endl;
     }

@@ -9,6 +9,9 @@ StackMachine::StackMachine()
     NF = 0;
     ZF = 0;
 
+    this->flags[Verbose] = false;
+    this->flags[Debug] = false;
+
     for (uint8_t i = 0; i < STACK_SIZE; i++)
         stack[i] = 0;
 }
@@ -206,7 +209,6 @@ void StackMachine::pow()
 }
 
 // R = (int)op1^(-2)
-// TODO: extremely rudimentary algorithm, please improve
 void StackMachine::sqrt()
 {
     bitset<INT_SIZE> op = stack[SP];

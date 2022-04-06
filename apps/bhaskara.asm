@@ -1,118 +1,91 @@
-; os 3 elementos na pilha sao os coeficientes do polinomio Ax^2 + Bx + C
-; x^2 + 2x - 3
-CLEAR
+; as 3 constantes sao os coeficientes do polinomio Ax^2 + Bx + C
 
-; ------------ primeira raiz ------------- ;
-PUSH    1 ; A
-PUSH    2
-MUL
-POP
-POP
-PUSH    $R
+A equ 1
+B equ 2
+C equ -3
 
-PUSH    1 ; A
-PUSH    -3 ;C
-MUL
-POP
-pOp
-PUSH    $R
+; raizes de x^2 + 2x - 3 = 0
 
-PUSH    -4
-MUL
-POP
-POP
-PUSH    $R
+    CLEAR
 
-PUSH    2
-PUSH    2 ;B
-POW
-POP
-POP
-PUSH    $R
+    PUSH    A
+    PUSH    2
+    MUL
+    POP
+    POP
+    PUSH    $R
 
-ADD
-POP
-POP
-PUSH    $R
+    PUSH    A
+    PUSH    C
+    MUL
+    POP
+    POP
+    PUSH    $R
 
-SQRT
-POP
-PUSH    $R
+    PUSH    -4
+    MUL
+    POP
+    POP
+    PUSH    $R
 
-PUSH    2 ;B
-PUSH    0
-SUB
-POP
-POP
-PUSH    $R
+    PUSH    2
+    PUSH    B
+    POW
+    POP
+    POP
+    PUSH    $R
 
-ADD
-POP
-POP
-PUSH    $R
+    ADD
+    POP
+    POP
+    PUSH    $R
 
-DIV
-POP
-POP
-PUSH    $R
+    SQRT
+    POP
+    PUSH    $R
+    STORE
 
-; ------------ segunda raiz ------------- ;
+    PUSH    B
+    PUSH    0
+    SUB
+    POP
+    POP
+    PUSH    $R
 
-PUSH    1 ; A
-PUSH    2
-MUL
-POP
-POP
-PUSH    $R
+    ADD
+    POP
+    POP
+    PUSH    $R
 
-PUSH    1 ; A
-PUSH    -3 ;C
-MUL
-POP
-POP
-PUSH    $R
+    DIV
+    POP
+    POP
+    PUSH    $R ; primeira raiz
 
-PUSH    -4
-MUL
-POP
-POP
-PUSH    $R
+    PUSH    A
+    PUSH    2
+    MUL
+    POP
+    POP
+    PUSH    $R
 
-PUSH    2
-PUSH    2 ;B
-POW
-POP
-POP
-PUSH    $R
+    LOAD
 
-ADD
-POP
-POP
-PUSH    $R
+    PUSH    B
+    PUSH    0
+    SUB
+    POP
+    POP
+    PUSH    $R
 
-SQRT
-POP
-PUSH    $R
+    SUB
+    POP
+    POP
+    PUSH    $R
 
-PUSH    2 ;B
-PUSH    0
-SUB
-POP
-POP
-PUSH    $R
+    DIV
+    POP
+    POP
+    PUSH    $R ; segunda raiz
 
-SUB
-POP
-POP
-PUSH    $R
 
-DIV
-POP
-POP
-PUSH    $R
-
-; --------------- resultados ---------------;
-
-; OUT     ; raiz 2
-; POP
-; OUT     ; raiz 1
