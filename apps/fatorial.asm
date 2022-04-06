@@ -1,10 +1,8 @@
-;int fatorial(int n)
-;{
-;  int r = 1;
-;  for (int i=1; i<=n; i++ )
-;    r *= i;
-;  return r;
-;}
+;n = 5
+;r = 1;
+;for (i=1; i<=n; i++)
+;   r *= i;
+;print(r)
 
 n equ 5
 r equ 1
