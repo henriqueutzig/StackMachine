@@ -11,7 +11,4 @@ $MAIN_LOOP:
     JZ $END
     JMP $MAIN_LOOP 
 $END:
-    PUSH count
-    STORE
-    POP
-    LOAD
+    

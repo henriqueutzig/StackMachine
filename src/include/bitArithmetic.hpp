@@ -26,6 +26,8 @@ struct bitArithmetic
 
     static bool greaterOrEqThen(const bitset<N> &op1, const bitset<N> &op2);
 
+    static bool greaterOrEqThenABS(const bitset<N> &op1, const bitset<N> &op2);
+
     static bool greaterThen(const bitset<N> &op1, const bitset<N> &op2);
 
     static bitset<N> abs(const bitset<N> &op);

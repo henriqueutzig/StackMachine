@@ -2,9 +2,7 @@
 #define STACKMACHINE_HPP
 
 #include <iostream>
-#include <stdint.h>
 #include <bitset>
-#include <bits/stdc++.h>
 #include "instructions.hpp"
 #include "bitArithmetic.hpp"
 
@@ -24,7 +22,7 @@ private:
     bitset<INT_SIZE> stack[STACK_SIZE] = {0};
 
     // Flags
-    bool flags[2];
+    bool flags[2] = {false};
     // Controll
     void clear();
     void push(bitset<INT_SIZE> val); // Stack full, returns value 1
